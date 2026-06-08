@@ -1,0 +1,23 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	planner(planner)
+	gather_sources(gather_sources)
+	synthesizer(synthesizer)
+	critic(critic)
+	writer(writer)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> planner;
+	critic -.-> planner;
+	critic -.-> writer;
+	gather_sources --> synthesizer;
+	planner --> gather_sources;
+	synthesizer --> critic;
+	writer --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

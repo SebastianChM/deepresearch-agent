@@ -7,8 +7,6 @@
 [![mypy strict](https://img.shields.io/badge/types-mypy%20strict-2A6DB4?style=for-the-badge)](https://mypy.readthedocs.io/)
 [![License MIT](https://img.shields.io/badge/license-MIT-A8C95A?style=for-the-badge)](LICENSE)
 
-![Architecture](docs/images/graph.png)
-
 ---
 
 ## What it does
@@ -25,22 +23,24 @@ The whole pipeline is orchestrated with [LangGraph](https://langchain-ai.github.
 
 ```mermaid
 graph TD;
-    __start__([start]):::endpoint
+    start([ start ]):::endpoint
     planner(Planner):::node
-    gather_sources(Search and Fetch):::node
-    synthesizer(Synthesize):::node
-    critic(Critic):::node
+    gather(Search and Fetch):::node
+    synth(Synthesize):::node
+    critic(Critic):::loop
     writer(Writer):::node
-    __end__([end]):::endpoint
-    __start__ --> planner;
-    planner --> gather_sources;
-    gather_sources --> synthesizer;
-    synthesizer --> critic;
-    critic -.->|has gaps| planner;
-    critic -.->|done| writer;
-    writer --> __end__;
-    classDef node fill:#0e1117,stroke:#06b6d4,stroke-width:2px,color:#f1f5f9
-    classDef endpoint fill:#1e293b,stroke:#475569,color:#cbd5e1
+    finish([ end ]):::endpoint
+    start --> planner;
+    planner --> gather;
+    gather --> synth;
+    synth --> critic;
+    critic -.->|Gaps detected| planner;
+    critic -.->|Approved| writer;
+    writer --> finish;
+    classDef node fill:#0e1117,stroke:#06b6d4,stroke-width:2px,color:#f1f5f9,rx:6,ry:6
+    classDef loop fill:#1c1917,stroke:#f59e0b,stroke-width:2px,color:#fef3c7,rx:6,ry:6
+    classDef endpoint fill:#1e293b,stroke:#64748b,color:#cbd5e1
+    linkStyle default stroke:#475569,stroke-width:1.5px
 ```
 
 - **Planner** — Decomposes the user question into 3–6 atomic, verifiable sub-questions using OpenAI structured outputs.

@@ -1,23 +1,19 @@
----
-config:
-  flowchart:
-    curve: linear
----
 graph TD;
-	__start__([<p>__start__</p>]):::first
-	planner(planner)
-	gather_sources(gather_sources)
-	synthesizer(synthesizer)
-	critic(critic)
-	writer(writer)
-	__end__([<p>__end__</p>]):::last
-	__start__ --> planner;
-	critic -.-> planner;
-	critic -.-> writer;
-	gather_sources --> synthesizer;
-	planner --> gather_sources;
-	synthesizer --> critic;
-	writer --> __end__;
-	classDef default fill:#f2f0ff,line-height:1.2
-	classDef first fill-opacity:0
-	classDef last fill:#bfb6fc
+    start([ start ]):::endpoint
+    planner(Planner):::node
+    gather(Search and Fetch):::node
+    synth(Synthesize):::node
+    critic(Critic):::loop
+    writer(Writer):::node
+    finish([ end ]):::endpoint
+    start --> planner;
+    planner --> gather;
+    gather --> synth;
+    synth --> critic;
+    critic -.->|Gaps detected| planner;
+    critic -.->|Approved| writer;
+    writer --> finish;
+    classDef node fill:#0e1117,stroke:#06b6d4,stroke-width:2px,color:#f1f5f9,rx:6,ry:6
+    classDef loop fill:#1c1917,stroke:#f59e0b,stroke-width:2px,color:#fef3c7,rx:6,ry:6
+    classDef endpoint fill:#1e293b,stroke:#64748b,color:#cbd5e1
+    linkStyle default stroke:#475569,stroke-width:1.5px
