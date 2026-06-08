@@ -16,6 +16,7 @@ class Settings(BaseSettings):
 
     openai_api_key: SecretStr
     tavily_api_key: SecretStr
+    app_access_password: SecretStr | None = None
     openai_model: str = "gpt-5.4-mini"
     max_iterations: Annotated[int, Field(ge=1, le=6)] = 2
     search_results_per_query: Annotated[int, Field(ge=1, le=10)] = 3

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import hmac
 import logging
 import time
 from datetime import UTC, datetime
@@ -364,6 +365,37 @@ html, body, [class*="css"], .stApp, .stMarkdown, .stTextArea, .stButton, .stMetr
 
 .how-section { margin-top: 36px; }
 
+.gate-card {
+    max-width: 520px;
+    margin: 64px auto 8px auto;
+    padding: 32px 36px;
+    background: linear-gradient(140deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+}
+.gate-eyebrow {
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: #f59e0b;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 14px;
+}
+.gate-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #f8fafc;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.025em;
+}
+.gate-subtitle {
+    font-size: 0.94rem;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin: 0;
+}
+
 [data-testid="stCodeBlock"] {
     background: rgba(0, 0, 0, 0.28) !important;
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
@@ -411,6 +443,17 @@ _HERO_HTML = """
         <span class="stack-badge">Tavily</span>
         <span class="stack-badge">Streamlit</span>
     </div>
+</div>
+"""
+
+_GATE_HTML = """
+<div class="gate-card">
+    <div class="gate-eyebrow">Restricted demo</div>
+    <h1 class="gate-title">Access key required</h1>
+    <p class="gate-subtitle">
+        This live demo runs on a personal OpenAI budget. Enter the access key
+        shared in your invitation to continue.
+    </p>
 </div>
 """
 
@@ -463,6 +506,31 @@ def _configure_logging() -> None:
         wrapper_class=structlog.make_filtering_bound_logger(logging.INFO),
         cache_logger_on_first_use=True,
     )
+
+
+def _enforce_access_gate(settings: Settings) -> None:
+    if settings.app_access_password is None:
+        return
+    if st.session_state.get("_gate_passed"):
+        return
+    _, center, _ = st.columns([1, 2, 1])
+    with center:
+        st.markdown(_GATE_HTML, unsafe_allow_html=True)
+        candidate = st.text_input(
+            "Access key",
+            type="password",
+            label_visibility="collapsed",
+            placeholder="Paste your access key",
+            key="_gate_input",
+        )
+        if st.button("Unlock", type="primary", use_container_width=True):
+            expected = settings.app_access_password.get_secret_value()
+            if hmac.compare_digest(candidate, expected):
+                st.session_state["_gate_passed"] = True
+                st.rerun()
+            else:
+                st.error("That access key is not recognized.")
+    st.stop()
 
 
 def _ensure_keys_configured(settings: Settings) -> None:
@@ -719,6 +787,7 @@ def main() -> None:
     st.markdown(_CUSTOM_CSS, unsafe_allow_html=True)
     settings = get_settings()
     _ensure_keys_configured(settings)
+    _enforce_access_gate(settings)
 
     left, right = st.columns([7, 3], gap="large")
     with right:
