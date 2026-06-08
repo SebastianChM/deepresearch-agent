@@ -17,6 +17,9 @@ colorTo: blue
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Ruff](https://img.shields.io/badge/lint-ruff-46AAA8?style=for-the-badge)](https://docs.astral.sh/ruff/)
 [![mypy strict](https://img.shields.io/badge/types-mypy%20strict-2A6DB4?style=for-the-badge)](https://mypy.readthedocs.io/)
+[![tests](https://img.shields.io/badge/tests-42%20passing-22C55E?style=for-the-badge)](#testing)
+[![coverage](https://img.shields.io/badge/coverage-90%25-22C55E?style=for-the-badge)](#testing)
+[![evals](https://img.shields.io/badge/evals-20%20queries%20%C2%B7%200.93%20topic-22C55E?style=for-the-badge)](#evaluation-results)
 [![License MIT](https://img.shields.io/badge/license-MIT-A8C95A?style=for-the-badge)](LICENSE)
 
 **Live demo:** [huggingface.co/spaces/SebastianChM/deepresearch-agent](https://huggingface.co/spaces/SebastianChM/deepresearch-agent)
@@ -132,6 +135,13 @@ deepresearch-agent/
 ├── scripts/
 │   ├── smoke_test.py              # End-to-end CLI run
 │   └── export_graph.py            # Renders the graph to docs/images
+├── tests/
+│   ├── unit/                      # Domain, config, search, fetcher, nodes
+│   └── integration/               # End-to-end graph with mocked deps
+├── evals/
+│   ├── dataset.yaml               # 20 research questions with expected topics
+│   ├── metrics.py                 # citation_coverage, cost_usd, judge, p50/p95
+│   └── runner.py                  # CLI runner with smoke and full modes
 ├── docs/images/                   # Architecture diagram (.mmd and .png)
 ├── .streamlit/config.toml         # Forces dark theme for the app
 ├── .env.example
@@ -139,14 +149,89 @@ deepresearch-agent/
 └── README.md
 ```
 
+## Testing
+
+The repository ships with a 42-test suite that runs offline (`httpx.MockTransport` for the search and fetch paths, a `FakeLLMClient` for the agent flow). `pytest` finishes in under 4 seconds and the project gates on `coverage >= 80%`.
+
+```bash
+uv run pytest -v
+uv run pytest --cov=src/deepresearch
+```
+
+Current coverage breakdown:
+
+| Module | Coverage |
+|---|---|
+| `agent/graph.py` | 98% |
+| `domain/models.py` | 96% |
+| `infrastructure/search.py` | 93% |
+| `infrastructure/fetcher.py` | 89% |
+| `infrastructure/llm.py` | 51% (retry branches exercised in integration only) |
+| **Total** | **90%** |
+
+## Evaluation results
+
+The agent is evaluated against a YAML dataset of 20 research questions across science, history, technology, health, and the arts. Each entry declares the topics a faithful report must cover. The runner executes the agent end-to-end against the real OpenAI and Tavily APIs and writes a timestamped JSON plus a Markdown table per run.
+
+```bash
+uv run python evals/runner.py --mode full --with-judge
+```
+
+The metrics computed per query:
+
+- **citation_coverage** — fraction of non-trivial paragraphs that contain at least one `[N]` inline citation.
+- **unique_citations** — distinct source indices referenced in the body.
+- **topic_coverage** — LLM-as-judge score (`covered_topics / expected_topics`) using `gpt-5.4-mini` as the judge.
+- **latency_seconds**, **prompt_tokens**, **completion_tokens**, **cost_usd** — captured from the OpenAI client's per-request usage.
+
+### Latest run
+
+`gpt-5.4-mini`, 20 queries, LLM judge enabled, 2026-06-08.
+
+| Metric | Value |
+|---|---|
+| Successful queries | 20 / 20 |
+| Mean citation coverage | **0.787** |
+| Mean topic coverage (judge) | **0.925** |
+| Latency p50 / p95 / mean | 36.9s / 100.0s / 46.0s |
+| Total cost | $0.81 USD |
+
+<details>
+<summary>Per-query breakdown</summary>
+
+| ID | Citation cov. | Topic cov. | Iterations | Sources | Latency (s) | Cost ($) |
+|---|---|---|---|---|---|---|
+| rag-advances | 0.824 | 1.00 | 3 | 8 | 42.4 | 0.064 |
+| crispr-basics | 0.850 | 0.75 | 2 | 6 | 29.6 | 0.032 |
+| apollo-11 | 0.889 | 1.00 | 2 | 6 | 26.7 | 0.024 |
+| quantum-entanglement | 0.786 | 1.00 | 1 | 5 | 19.9 | 0.022 |
+| climate-impacts | 0.800 | 1.00 | 3 | 12 | 190.3 | 0.065 |
+| bitcoin-protocol | 0.885 | 0.75 | 3 | 9 | 43.5 | 0.059 |
+| mediterranean-diet | 0.750 | 0.75 | 2 | 7 | 37.1 | 0.042 |
+| photosynthesis | 0.818 | 1.00 | 1 | 7 | 26.0 | 0.015 |
+| jwst-discoveries | 0.737 | 1.00 | 2 | 9 | 39.6 | 0.044 |
+| ww2-causes | 0.692 | 1.00 | 2 | 8 | 34.0 | 0.047 |
+| ml-bias | 0.882 | 1.00 | 1 | 5 | 23.8 | 0.024 |
+| french-revolution | 0.867 | 1.00 | 2 | 7 | 36.6 | 0.040 |
+| cancer-immunotherapy | 0.846 | 1.00 | 2 | 7 | 33.0 | 0.043 |
+| internet-origins | 0.778 | 1.00 | 2 | 9 | 47.4 | 0.041 |
+| mars-exploration | 0.625 | 1.00 | 2 | 8 | 38.6 | 0.046 |
+| renewable-energy | 0.562 | 0.50 | 1 | 6 | 32.8 | 0.024 |
+| antibiotic-resistance | 0.750 | 1.00 | 2 | 9 | 48.1 | 0.049 |
+| renaissance | 0.818 | 1.00 | 1 | 4 | 30.7 | 0.021 |
+| ev-adoption | 0.762 | 0.75 | 3 | 11 | 95.3 | 0.049 |
+| sleep-science | 0.826 | 1.00 | 2 | 11 | 45.7 | 0.064 |
+
+</details>
+
+The `renewable-energy` query is the clearest outlier: the planner produced sub-questions whose web results were thin on the specific topics the judge expected, dragging both metrics down. This is the kind of failure the eval suite is meant to surface for follow-up.
+
 ## Roadmap
 
-- Per-sub-question source filtering to cut synthesizer token cost by ~70%
-- Unit and integration test suite with `pytest` and `vcrpy` cassettes
-- Eval harness with metrics: `citation_coverage`, `topic_coverage`, `latency_p95`, `cost_per_query`
-- Deployment to HuggingFace Spaces with a public demo link
-- Optional LangSmith tracing for production observability
-- Multi-provider LLM support behind a thin abstraction (Anthropic, OpenRouter, local models)
+- Per-sub-question source filtering (BM25 or embedding similarity) to cut synthesizer token cost on long contexts
+- LangSmith tracing for hosted observability
+- Multi-provider LLM abstraction (Anthropic, OpenRouter, local Ollama)
+- GitHub Actions workflow to run the smoke eval on every PR
 
 ## License
 
