@@ -4,9 +4,9 @@ sdk: docker
 app_port: 7860
 pinned: false
 license: mit
-short_description: LLM research agent that plans, searches the web, and synthesizes cited Markdown reports
+short_description: LLM research agent that produces cited Markdown reports
 colorFrom: indigo
-colorTo: cyan
+colorTo: blue
 ---
 
 # Deep Research Agent
