@@ -6,6 +6,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
+        libcairo2-dev \
+        pkg-config \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir uv==0.10.12
 
