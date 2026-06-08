@@ -1,3 +1,14 @@
+---
+title: Deep Research Agent
+sdk: docker
+app_port: 7860
+pinned: false
+license: mit
+short_description: LLM research agent that plans, searches the web, and synthesizes cited Markdown reports
+colorFrom: indigo
+colorTo: cyan
+---
+
 # Deep Research Agent
 
 > An LLM agent that plans, searches the web, reads sources, and synthesizes a Markdown research report with verifiable inline citations.
