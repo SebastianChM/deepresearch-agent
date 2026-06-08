@@ -17,10 +17,10 @@ class Settings(BaseSettings):
     openai_api_key: SecretStr
     tavily_api_key: SecretStr
     openai_model: str = "gpt-5.4-mini"
-    max_iterations: Annotated[int, Field(ge=1, le=6)] = 3
-    search_results_per_query: Annotated[int, Field(ge=1, le=10)] = 5
+    max_iterations: Annotated[int, Field(ge=1, le=6)] = 2
+    search_results_per_query: Annotated[int, Field(ge=1, le=10)] = 3
     fetch_timeout_seconds: Annotated[float, Field(gt=0.0, le=60.0)] = 10.0
-    max_tokens_per_source: Annotated[int, Field(ge=500, le=16000)] = 4000
+    max_tokens_per_source: Annotated[int, Field(ge=500, le=16000)] = 2000
 
 
 @lru_cache(maxsize=1)

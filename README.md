@@ -13,10 +13,13 @@ colorTo: blue
 
 > An LLM agent that plans, searches the web, reads sources, and synthesizes a Markdown research report with verifiable inline citations.
 
+[![Open in HF Spaces](https://img.shields.io/badge/HuggingFace-Open%20in%20Spaces-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/spaces/SebastianChM/deepresearch-agent)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Ruff](https://img.shields.io/badge/lint-ruff-46AAA8?style=for-the-badge)](https://docs.astral.sh/ruff/)
 [![mypy strict](https://img.shields.io/badge/types-mypy%20strict-2A6DB4?style=for-the-badge)](https://mypy.readthedocs.io/)
 [![License MIT](https://img.shields.io/badge/license-MIT-A8C95A?style=for-the-badge)](LICENSE)
+
+**Live demo:** [huggingface.co/spaces/SebastianChM/deepresearch-agent](https://huggingface.co/spaces/SebastianChM/deepresearch-agent)
 
 ---
 
