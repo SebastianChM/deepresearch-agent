@@ -47,6 +47,8 @@ class OpenAIClient:
             timeout=_SDK_TIMEOUT_SECONDS,
         )
         self.total_tokens_used: int = 0
+        self.prompt_tokens_used: int = 0
+        self.completion_tokens_used: int = 0
 
     async def complete_structured(
         self,
@@ -100,6 +102,8 @@ class OpenAIClient:
         if usage is None:
             return
         self.total_tokens_used += usage.total_tokens
+        self.prompt_tokens_used += usage.prompt_tokens
+        self.completion_tokens_used += usage.completion_tokens
         logger.info(
             "llm.completion",
             model=self._settings.openai_model,

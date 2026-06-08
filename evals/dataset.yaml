@@ -1,0 +1,183 @@
+# Eval dataset for the deep research agent.
+# Each entry: id, question, expected_topics (3-6), must_cite_min.
+# Topics should be substantive aspects a faithful report must cover.
+
+- id: rag-advances
+  question: "What are the most recent advances in retrieval-augmented generation?"
+  expected_topics:
+    - hybrid retrieval
+    - reranking
+    - graph-based RAG
+    - evaluation benchmarks
+  must_cite_min: 3
+
+- id: crispr-basics
+  question: "What is CRISPR-Cas9 and how does it edit genes?"
+  expected_topics:
+    - guide RNA targeting
+    - Cas9 nuclease cutting
+    - DNA repair mechanisms
+    - therapeutic applications
+  must_cite_min: 3
+
+- id: apollo-11
+  question: "What were the key milestones of the Apollo 11 mission?"
+  expected_topics:
+    - launch and crew
+    - lunar landing date
+    - moonwalk activities
+    - safe return to Earth
+  must_cite_min: 3
+
+- id: quantum-entanglement
+  question: "What is quantum entanglement and why is it important?"
+  expected_topics:
+    - EPR paradox
+    - Bell's theorem
+    - non-locality
+    - quantum computing applications
+  must_cite_min: 3
+
+- id: climate-impacts
+  question: "What are the most well-documented impacts of climate change?"
+  expected_topics:
+    - rising sea levels
+    - extreme weather frequency
+    - ecosystem disruption
+    - agricultural effects
+  must_cite_min: 3
+
+- id: bitcoin-protocol
+  question: "How does the Bitcoin protocol work at a technical level?"
+  expected_topics:
+    - blockchain structure
+    - proof of work mining
+    - transaction validation
+    - block rewards and halving
+  must_cite_min: 3
+
+- id: mediterranean-diet
+  question: "What does scientific evidence say about the Mediterranean diet?"
+  expected_topics:
+    - core food groups
+    - cardiovascular benefits
+    - PREDIMED study
+    - longevity evidence
+  must_cite_min: 3
+
+- id: photosynthesis
+  question: "How does photosynthesis convert light into chemical energy?"
+  expected_topics:
+    - light-dependent reactions
+    - Calvin cycle
+    - chlorophyll role
+    - oxygen production
+  must_cite_min: 3
+
+- id: jwst-discoveries
+  question: "What major discoveries has the James Webb Space Telescope made so far?"
+  expected_topics:
+    - early universe galaxies
+    - exoplanet atmospheres
+    - star formation regions
+    - infrared imaging capability
+  must_cite_min: 3
+
+- id: ww2-causes
+  question: "What were the main causes of World War II?"
+  expected_topics:
+    - Treaty of Versailles
+    - rise of fascism
+    - economic depression
+    - failure of appeasement
+  must_cite_min: 3
+
+- id: ml-bias
+  question: "Where does bias in machine learning systems come from and how is it mitigated?"
+  expected_topics:
+    - training data bias
+    - algorithmic bias
+    - fairness metrics
+    - mitigation techniques
+  must_cite_min: 3
+
+- id: french-revolution
+  question: "What were the main causes and outcomes of the French Revolution?"
+  expected_topics:
+    - financial crisis of the monarchy
+    - Estates-General
+    - Declaration of the Rights of Man
+    - Napoleonic rise
+  must_cite_min: 3
+
+- id: cancer-immunotherapy
+  question: "How does cancer immunotherapy work and what are its main approaches?"
+  expected_topics:
+    - checkpoint inhibitors
+    - CAR-T cell therapy
+    - immune system mechanisms
+    - clinical outcomes
+  must_cite_min: 3
+
+- id: internet-origins
+  question: "How did the modern internet originate and evolve?"
+  expected_topics:
+    - ARPANET
+    - TCP/IP protocol
+    - World Wide Web
+    - commercial expansion
+  must_cite_min: 3
+
+- id: mars-exploration
+  question: "What is the current state of Mars exploration?"
+  expected_topics:
+    - active rovers
+    - sample collection plans
+    - atmospheric and geological findings
+    - planned crewed missions
+  must_cite_min: 3
+
+- id: renewable-energy
+  question: "How has renewable energy capacity grown globally in recent years?"
+  expected_topics:
+    - solar capacity growth
+    - wind power expansion
+    - cost reductions
+    - grid integration challenges
+  must_cite_min: 3
+
+- id: antibiotic-resistance
+  question: "What is causing the rise of antibiotic resistance worldwide?"
+  expected_topics:
+    - overuse in medicine
+    - agricultural use
+    - resistance mechanisms
+    - global health response
+  must_cite_min: 3
+
+- id: renaissance
+  question: "What defined the Renaissance as a historical and cultural movement?"
+  expected_topics:
+    - origins in Italy
+    - humanism
+    - artistic innovation
+    - scientific revival
+  must_cite_min: 3
+
+- id: ev-adoption
+  question: "What are the main drivers and barriers of electric vehicle adoption?"
+  expected_topics:
+    - battery cost trends
+    - charging infrastructure
+    - government incentives
+    - consumer adoption rates
+  must_cite_min: 3
+
+- id: sleep-science
+  question: "What does sleep science say about the function and impact of sleep?"
+  expected_topics:
+    - sleep stages
+    - circadian rhythm
+    - memory consolidation
+    - health consequences of deprivation
+  must_cite_min: 3
